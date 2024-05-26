@@ -8,7 +8,11 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import static javax.persistence.GenerationType.IDENTITY;
 
 @Data
 @AllArgsConstructor
@@ -17,7 +21,7 @@ import java.util.List;
 @Table(name = "phrases")
 public class Phrase { //TODO refactor dbDTO
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     @Column(name = "id")
     private Long id;
 
@@ -52,16 +56,9 @@ public class Phrase { //TODO refactor dbDTO
     private List<String> examples;
 
     @JsonIgnoreProperties(value = "phrases")
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {
-                    CascadeType.PERSIST,
-                    CascadeType.MERGE
-            })
+    @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH })
     @JoinTable(name = "group_phrase",
             joinColumns = @JoinColumn(name = "phrase_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "group_id", referencedColumnName = "id"))
     private List<Group> groups;
-
-//    //TODO refactor
-//    private String groupDescription;
 }

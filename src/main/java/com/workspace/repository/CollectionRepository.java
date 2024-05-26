@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CollectionRepository extends JpaRepository<Group, Long> {
     @Query(
-            value = "SELECT * FROM groups WHERE user_id = :user_id",
+            value = "SELECT * FROM groups WHERE user_id = :user_id ORDER BY id DESC",
             nativeQuery = true)
     List<Group> findCollectionsByUserId(@Param("user_id") Long userId);
 

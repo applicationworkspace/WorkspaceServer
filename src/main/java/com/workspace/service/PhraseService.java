@@ -43,12 +43,20 @@ public class PhraseService {
         }
     }
 
-    public void removePhrase(Long phraseId) {
+    public void deletePhrase(Long phraseId) {
         phraseRepository.deleteById(phraseId);
     }
 
     public List<Group> getCollectionsByUserId(Long userId) {
         return collectionRepository.findCollectionsByUserId(userId);
+    }
+
+    public Group addGroup(Group group) {
+        return collectionRepository.save(group);
+    }
+
+    public void deleteGroup(Long phraseId) {
+        collectionRepository.deleteById(phraseId);
     }
 
 //    public List<String> getGroupNamesForPhrase(Long phraseId) {

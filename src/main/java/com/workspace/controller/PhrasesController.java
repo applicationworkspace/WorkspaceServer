@@ -4,15 +4,12 @@ import com.workspace.dto.collection.PhraseStatusRequest;
 import com.workspace.exception.AppException;
 import com.workspace.model.Group;
 import com.workspace.model.Phrase;
-import com.workspace.model.prediction.DictionaryEntry;
 import com.workspace.security.CurrentUser;
 import com.workspace.security.UserPrincipal;
 import com.workspace.service.PhraseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -85,6 +82,7 @@ public class PhrasesController { //TODO create colection controller
 
         phrase.setUserId(currentUser.getId());
         phrase.setGroups(Collections.singletonList(selectedCollection));
+//        phrase.setGroups(Set.of(selectedCollection));
         phraseService.addPhrase(phrase);
     }
 
@@ -98,7 +96,7 @@ public class PhrasesController { //TODO create colection controller
     @DeleteMapping("phrases")
     @PreAuthorize("hasRole('USER')")
     public void removePhrase(@RequestParam Long phraseId) {
-        phraseService.removePhrase(phraseId); //TODO check other user permission
+        phraseService.deletePhrase(phraseId); //TODO check other user permission
     }
 
     @GetMapping("collections")
@@ -107,6 +105,21 @@ public class PhrasesController { //TODO create colection controller
         List<Group> userGroups = phraseService.getCollectionsByUserId(currentUser.getId());
 //        List<String> groups = phraseService.getGroupNamesForPhrase(userGroups[1].phras)
         return userGroups;
+    }
+
+    @PostMapping("collections")
+    @PreAuthorize("hasRole('USER')")
+    public Group addGroup(@CurrentUser UserPrincipal currentUser,
+                                   @RequestBody Group groupRequest) {
+
+        groupRequest.setUserId(currentUser.getId());
+        return phraseService.addGroup(groupRequest);
+    }
+
+    @DeleteMapping("collections")
+    @PreAuthorize("hasRole('USER')")
+    public void deleteGroup(@RequestParam Long groupId) {
+        phraseService.deleteGroup(groupId);
     }
 
 //    @GetMapping("phrases/prediction")

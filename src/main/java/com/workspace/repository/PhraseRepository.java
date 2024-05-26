@@ -14,7 +14,7 @@ import java.util.List;
 @Repository
 public interface PhraseRepository extends JpaRepository<Phrase, Long> {
     @Query(
-            value = "SELECT * FROM phrases WHERE user_id = :user_id",
+            value = "SELECT * FROM phrases WHERE user_id = :user_id ORDER BY id DESC",
             nativeQuery = true)
     List<Phrase> findPhrasesByUserId(@Param("user_id") Long userId);
 
